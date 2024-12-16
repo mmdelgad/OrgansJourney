@@ -2793,6 +2793,11 @@ self.C3_ExpressionFuncs = [
 		() => "Arrow fluids flow logic",
 		p => {
 			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => (n0.ExpObject() - (500 * f1()));
+		},
+		p => {
+			const n0 = p._GetNode(0);
 			return () => n0.ExpBehavior();
 		},
 		p => {
@@ -2802,6 +2807,11 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpInstVar() * 1.5);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => (n0.ExpObject() + (500 * f1()));
 		},
 		p => {
 			const n0 = p._GetNode(0);
@@ -2822,6 +2832,21 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Destroy obstacles",
 		() => 4000,
+		() => "Sperm - Win/Loose condition",
+		p => {
+			const n0 = p._GetNode(0);
+			const v1 = p._GetNode(1).GetVar();
+			const f2 = p._GetNode(2).GetBoundMethod();
+			const v3 = p._GetNode(3).GetVar();
+			return () => n0.ExpObject((((v1.GetValue() + f2()) + v3.GetValue()) + "Acid"));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const v1 = p._GetNode(1).GetVar();
+			const f2 = p._GetNode(2).GetBoundMethod();
+			const v3 = p._GetNode(3).GetVar();
+			return () => n0.ExpObject((((v1.GetValue() + f2()) + v3.GetValue()) + "Wall"));
+		},
 		() => "Map Dialogs",
 		p => {
 			const n0 = p._GetNode(0);
@@ -2844,6 +2869,7 @@ self.C3_ExpressionFuncs = [
 		() => "Maze",
 		() => "NervousS",
 		() => "Skin",
+		() => "Sperm",
 		() => "Dialog elements appearing",
 		p => {
 			const n0 = p._GetNode(0);
@@ -2854,6 +2880,7 @@ self.C3_ExpressionFuncs = [
 		() => "Changing dialog",
 		() => 9,
 		() => 10,
+		() => 11,
 		() => "CloseDialog",
 		() => "Hiding Dialog",
 		() => "Timer START",

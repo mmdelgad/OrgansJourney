@@ -64,7 +64,12 @@
 		"SkinWin": "Amazing job! You completed all the objectives and protected your skin from every threat. Thanks to your quick actions, you stayed safe and reached the finish line. Well done!",
 		"SkinLooseHot": "Oh no! Your body overheated because you didn’t jump into the pool in time. Remember, cooling off in the water is the best way to lower your temperature. Try again and stay cool!",
 		"SkinLooseDamage": "Oh no! Your skin was exposed to UV rays for too long because you didn’t reach the sunscreen in time. Remember, applying sunscreen is essential to protect your skin. Try again and stay safe under the sun!",
-		"SkinLooseCold": "So close! You didn’t find your jacket in time, and your body temperature dropped too much. Try again!"
+		"SkinLooseCold": "So close! You didn’t find your jacket in time, and your body temperature dropped too much. Try again!",
+		"Sperm1": "Welcome to the reproductive system challenge! Your goal is to guide a sperm cell through its journey to reach the egg.",
+		"Sperm2": "Watch out for obstacles like acidic environments and strong currents. Stay focused and help complete this incredible process!",
+		"SpermLooseAcid": "Oh no! The sperm cell was hit by a moving acid ball and couldn’t continue the journey. Stay alert and dodge these obstacles next time to reach the egg!",
+		"SpermLooseWall": "Oops! The sperm cell hit the uterine wall and got stuck. Stay on course and navigate carefully next time to complete the journey!",
+		"SpermWin": "Congratulations! You successfully guided the sperm cell through all the challenges and reached the egg. Great job completing this incredible journey!"
 		
 		
 		

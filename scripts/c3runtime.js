@@ -1203,6 +1203,21 @@ const C3=self.C3;C3.JobSchedulerRuntime=class extends C3.DefendedBase{constructo
 // scripts/shaders.js
 {
 self["C3_Shaders"] = {};
+self["C3_Shaders"]["warpripple"] = {
+	glsl: "#ifdef GL_FRAGMENT_PRECISION_HIGH\n#define highmedp highp\n#else\n#define highmedp mediump\n#endif\nvarying mediump vec2 vTex;\nuniform lowp sampler2D samplerFront;\nuniform mediump vec2 srcStart;\nuniform mediump vec2 srcEnd;\nuniform mediump vec2 srcOriginStart;\nuniform mediump vec2 srcOriginEnd;\nuniform highmedp float seconds;\nuniform mediump vec2 pixelSize;\nuniform mediump float freq;\nuniform mediump float amp;\nuniform mediump float speed;\nconst mediump float PI = 3.1415926;\nvoid main(void)\n{\nmediump vec2 srcOriginSize = srcOriginEnd - srcOriginStart;\nmediump vec2 tex = (vTex - srcOriginStart) / srcOriginSize;\ntex = tex * 2.0 - 1.0;\nmediump float d = length(tex);\nmediump float a = atan(tex.y, tex.x);\nd += sin((d * 2.0 * PI) * freq / (pixelSize.x * 750.0) + (seconds * speed)) * amp * (pixelSize.x * 750.0);\ntex.x = cos(a) * d;\ntex.y = sin(a) * d;\ntex = (tex + 1.0) / 2.0;\ntex = tex * srcOriginSize + srcOriginStart;\ntex = clamp(tex, min(srcStart, srcEnd), max(srcStart, srcEnd));\ngl_FragColor = texture2D(samplerFront, tex);\n}",
+	glslWebGL2: "",
+	wgsl: "%%SAMPLERFRONT_BINDING%% var samplerFront : sampler;\n%%TEXTUREFRONT_BINDING%% var textureFront : texture_2d<f32>;\nstruct ShaderParams {\nfreq : f32,\namp : f32,\nspeed : f32\n};\n%%SHADERPARAMS_BINDING%% var<uniform> shaderParams : ShaderParams;\n%%C3PARAMS_STRUCT%%\n%%C3_UTILITY_FUNCTIONS%%\n%%FRAGMENTINPUT_STRUCT%%\n%%FRAGMENTOUTPUT_STRUCT%%\nconst pi : f32 = 3.1415926;\n@fragment\nfn main(input : FragmentInput) -> FragmentOutput\n{\nvar pixelSize : vec2<f32> = c3_getPixelSize(textureFront);\nvar tex = c3_srcOriginToNorm(input.fragUV);\ntex = tex * 2.0 - 1.0;\nvar d : f32 = length(tex);\nvar a = atan2(tex.y, tex.x);\nd = d + sin((d * 2.0 * pi) * shaderParams.freq / (pixelSize.x * 750.0) + (c3Params.seconds * shaderParams.speed)) * shaderParams.amp * (pixelSize.x * 750.0);\ntex.x = cos(a) * d;\ntex.y = sin(a) * d;\ntex = (tex + 1.0) / 2.0;\ntex = c3_normToSrcOrigin(tex);\ntex = c3_clampToSrc(tex);\nvar output : FragmentOutput;\noutput.color = textureSample(textureFront, samplerFront, tex);\nreturn output;\n}",
+	blendsBackground: false,
+	usesDepth: false,
+	extendBoxHorizontal: 50,
+	extendBoxVertical: 50,
+	crossSampling: false,
+	mustPreDraw: false,
+	preservesOpaqueness: false,
+	supports3dDirectRendering: false,
+	animated: true,
+	parameters: [["freq",0,"float"],["amp",0,"percent"],["speed",0,"float"]]
+};
 
 }
 
@@ -2243,13 +2258,51 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0();
 		},
+		() => "Menu - Start",
+		() => 0,
+		() => "",
+		() => -10,
 		() => "Starting a New Game",
+		() => "Ray Effect and rain",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0(4, 10);
+		},
+		() => "Ray",
+		() => 920,
+		() => 328,
+		() => 1032,
+		() => 368,
+		() => 90,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0(3, 6);
+		},
+		() => "FlashEffect",
+		() => 480,
+		() => 184,
+		() => 0.2,
+		() => 0.05,
+		() => 1,
+		() => 2,
+		() => "Rain",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			const n2 = p._GetNode(2);
+			return () => f0((n1.ExpObject() - 500), (n2.ExpObject() + 700));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() - 300);
+		},
+		() => 120,
+		() => 1500,
 		() => "FadeOut",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0("Fade");
 		},
-		() => 0,
 		() => "Fade",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -2304,28 +2357,23 @@ self.C3_ExpressionFuncs = [
 			const v0 = p._GetNode(0).GetVar();
 			return () => v0.GetValue();
 		},
+		() => "Animation 1",
 		() => "Following Cell (Camera)",
 		() => "Moving cell to next Stage",
 		() => 3,
 		() => "move",
-		() => 1,
-		() => 2,
-		() => 4,
-		() => 5,
-		() => 6,
-		() => 7,
 		() => "NeuroSeq Start",
-		() => "",
 		() => "NeuronSeq",
 		() => "StartSequence",
 		() => "NeuronSeq2",
+		() => 4,
 		() => "NeuronSeq3",
+		() => 6,
 		() => "Activating Nodes",
 		() => "Animation 2",
 		() => "Showing sequence",
 		() => "ShowSequence",
 		() => "ShowingSequence",
-		() => "Animation 1",
 		() => "RepeatingSequence",
 		() => "Repeating Sequence",
 		p => {
@@ -2410,7 +2458,7 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			const n1 = p._GetNode(1);
-			return () => C3.lerp(n0.ExpObject(), ((n1.ExpInstVar() * 720) / 15), 0.08);
+			return () => C3.lerp(n0.ExpObject(), ((n1.ExpInstVar() * 373) / 15), 0.08);
 		},
 		() => "Winning Game",
 		() => "Showing Muscles Details",
@@ -2443,7 +2491,6 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Loosing Game - Muscle Hero",
 		() => "Tutorial - MusclesHero",
-		() => 0.2,
 		() => "Start - Lungs",
 		() => 80,
 		() => "Round",
@@ -2471,6 +2518,7 @@ self.C3_ExpressionFuncs = [
 			const n4 = p._GetNode(4);
 			return () => n0.ExpObject(and(((v1.GetValue() + f2()) + v3.GetValue()), n4.ExpInstVar()));
 		},
+		() => "ButtonBase",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject(1);
@@ -2480,9 +2528,8 @@ self.C3_ExpressionFuncs = [
 			const v1 = p._GetNode(1).GetVar();
 			return () => n0.ExpObject((v1.GetValue() + "LungsTutorial1"));
 		},
-		() => 700,
+		() => 500,
 		() => 300,
-		() => 25,
 		() => -717750023016447,
 		p => {
 			const n0 = p._GetNode(0);
@@ -2493,7 +2540,7 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			const n1 = p._GetNode(1);
-			return () => (((n0.ExpObject() * 0.3) / n1.ExpInstVar()) + 1);
+			return () => (((n0.ExpObject() * 0.2) / n1.ExpInstVar()) + 1);
 		},
 		p => {
 			const n0 = p._GetNode(0);
@@ -2508,7 +2555,6 @@ self.C3_ExpressionFuncs = [
 			return () => (n0.ExpObject() - (n1.ExpInstVar() * f2()));
 		},
 		() => "HaciendoZoom",
-		() => 0.5,
 		() => 450,
 		p => {
 			const n0 = p._GetNode(0);
@@ -2521,17 +2567,15 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => (n0.ExpObject() + n1.ExpObject());
 		},
-		() => 1.3,
 		() => "Camara - Lungs",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => C3.lerp(f0(), 1, 0.08);
+		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => C3.lerp(f0(), 0.9, 0.08);
 		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => C3.lerp(f0(), 0.5, 0.08);
-		},
-		() => "Button Sine Behavior",
 		() => "New Round Setup",
 		() => "HideDialog",
 		() => "StartingRound",
@@ -2539,6 +2583,8 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpObject() - 10);
 		},
+		() => "Button Highlight Flashing",
+		() => 0.3,
 		() => "Stomach Start",
 		() => "PTW",
 		p => {
@@ -2578,6 +2624,7 @@ self.C3_ExpressionFuncs = [
 			return () => C3.lerp(n0.ExpInstVar(), 25, 0.08);
 		},
 		() => "Particles moving through Stomach",
+		() => 5,
 		() => "Acid bubbles logic",
 		() => "ForBubbles",
 		() => "Acid",
@@ -2597,7 +2644,6 @@ self.C3_ExpressionFuncs = [
 			return () => (Math.floor(f0(0, 2))).toString();
 		},
 		() => "Pipes Touching",
-		() => 90,
 		() => "Angle",
 		() => "Segment",
 		() => "Horizontal",
@@ -2664,6 +2710,7 @@ self.C3_ExpressionFuncs = [
 		() => "Pepsin",
 		() => "Lipase",
 		() => "Buttons Behavior - Intestine",
+		() => 0.9,
 		() => "Absorbing Particles",
 		p => {
 			const n0 = p._GetNode(0);
@@ -2714,6 +2761,7 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0(4, 8);
 		},
+		() => "Buttons effect sound",
 		() => "Nervous Start",
 		() => "HotEffect",
 		() => "TimeToStartPlaying",
@@ -2754,11 +2802,11 @@ self.C3_ExpressionFuncs = [
 			return () => (n0.ExpInstVar() - ((n1.ExpBehavior("TimeToReact") * n2.ExpInstVar()) / n3.ExpBehavior("TimeToReact")));
 		},
 		() => "Stimuli effects",
-		() => "FlashEffect",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => C3.lerp(f0("FlashEffect"), 0, 0.08);
 		},
+		() => 0.5,
 		() => "CameraFlash",
 		() => "RaceCar",
 		p => {
@@ -2781,6 +2829,7 @@ self.C3_ExpressionFuncs = [
 		() => 514,
 		() => 515,
 		() => 516,
+		() => 7,
 		() => "Following Character",
 		() => "Picking up Sunscreen",
 		p => {
@@ -2850,7 +2899,6 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Sperm Start",
 		() => 2000,
-		() => 500,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0(200, 300);

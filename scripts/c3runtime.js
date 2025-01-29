@@ -1218,6 +1218,21 @@ self["C3_Shaders"]["warpripple"] = {
 	animated: true,
 	parameters: [["freq",0,"float"],["amp",0,"percent"],["speed",0,"float"]]
 };
+self["C3_Shaders"]["tint"] = {
+	glsl: "varying mediump vec2 vTex;\nuniform lowp sampler2D samplerFront;\nuniform lowp vec3 tintColor;\nvoid main(void)\n{\nlowp vec4 front = texture2D(samplerFront, vTex);\ngl_FragColor = front * vec4(tintColor.r, tintColor.g, tintColor.b, 1.0);\n}",
+	glslWebGL2: "",
+	wgsl: "%%SAMPLERFRONT_BINDING%% var samplerFront : sampler;\n%%TEXTUREFRONT_BINDING%% var textureFront : texture_2d<f32>;\nstruct ShaderParams {\ntintColor : vec3<f32>\n};\n%%SHADERPARAMS_BINDING%% var<uniform> shaderParams : ShaderParams;\n%%FRAGMENTINPUT_STRUCT%%\n%%FRAGMENTOUTPUT_STRUCT%%\n@fragment\nfn main(input : FragmentInput) -> FragmentOutput {\nvar front : vec4<f32> = textureSample(textureFront, samplerFront, input.fragUV);\nvar output : FragmentOutput;\noutput.color = front * vec4<f32>(shaderParams.tintColor, 1.0);\nreturn output;\n}",
+	blendsBackground: false,
+	usesDepth: false,
+	extendBoxHorizontal: 0,
+	extendBoxVertical: 0,
+	crossSampling: false,
+	mustPreDraw: false,
+	preservesOpaqueness: true,
+	supports3dDirectRendering: false,
+	animated: false,
+	parameters: [["tintColor",0,"color"]]
+};
 
 }
 
@@ -2128,6 +2143,11 @@ const C3=self.C3,b2Separator={},GetVec2=(C3.Behaviors.Physics.Separator=b2Separa
 {const a=self.C3;a.Behaviors.solid=class extends a.SDKBehaviorBase{constructor(e){super(e)}Release(){super.Release()}}}{const d=self.C3;d.Behaviors.solid.Type=class extends d.SDKBehaviorTypeBase{constructor(e){super(e)}Release(){super.Release()}OnCreate(){}}}{const g=self.C3,h=self.C3X,i=self.IBehaviorInstance,j=0,k=1,l=new Set,m=(g.Behaviors.solid.Instance=class extends g.SDKBehaviorInstanceBase{constructor(e,s){super(e),this.SetEnabled(!0),s&&(this.SetEnabled(s[j]),this.SetTags(s[k]))}Release(){super.Release()}SetEnabled(e){this._inst._SetSolidEnabled(!!e)}IsEnabled(){return this._inst._IsSolidEnabled()}SetTags(s){const t=this._inst.GetSavedDataMap();if(s.trim()){let e=t.get("solidTags");e||(e=new Set,t.set("solidTags",e)),e.clear();for(const a of s.split(" "))a&&e.add(a.toLowerCase())}else t.delete("solidTags")}GetTags(){return this._inst.GetSavedDataMap().get("solidTags")||l}_GetTagsString(){return[...this.GetTags()].join(" ")}SaveToJson(){return{"e":this.IsEnabled()}}LoadFromJson(e){this.SetEnabled(e["e"])}GetPropertyValueByIndex(e){if(e===j)return this.IsEnabled()}SetPropertyValueByIndex(e,s){e===j&&this.SetEnabled(s)}GetDebuggerProperties(){return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:"behaviors.solid.properties.enabled.name",value:this.IsEnabled(),onedit:e=>this.SetEnabled(e)},{name:"behaviors.solid.properties.tags.name",value:this._GetTagsString(),onedit:e=>this.SetTags(e)}]}]}GetScriptInterfaceClass(){return self.ISolidBehaviorInstance}},new WeakMap);self.ISolidBehaviorInstance=class extends i{constructor(){super(),m.set(this,i._GetInitInst().GetSdkInstance())}set isEnabled(e){m.get(this).SetEnabled(!!e)}get isEnabled(){return m.get(this).IsEnabled()}set tags(e){h.RequireString(e),m.get(this).SetTags(e)}get tags(){return m.get(this)._GetTagsString()}}}{const E=self.C3;E.Behaviors.solid.Cnds={IsEnabled(){return this.IsEnabled()}}}{const F=self.C3;F.Behaviors.solid.Acts={SetEnabled(e){this.SetEnabled(e)},SetTags(e){this.SetTags(e)}}}{const I=self.C3;I.Behaviors.solid.Exps={}}
 }
 
+// scripts/behaviors/Flash/c3runtime/runtime.js
+{
+{const a=self.C3;a.Behaviors.Flash=class extends a.SDKBehaviorBase{constructor(e){super(e)}Release(){super.Release()}}}{const d=self.C3;d.Behaviors.Flash.Type=class extends d.SDKBehaviorTypeBase{constructor(e){super(e)}Release(){super.Release()}OnCreate(){}}}{const g=self.C3,h=self.C3X,i=self.IBehaviorInstance,j=(g.Behaviors.Flash.Instance=class extends g.SDKBehaviorInstanceBase{constructor(e,t){super(e),this._onTime=0,this._offTime=0,this._stage=0,this._stageTimeLeft=0,this._timeLeft=0,this._StartTicking()}Release(){super.Release()}_Flash(e,t,s){this._onTime=e,this._offTime=t,this._stage=1,this._stageTimeLeft=t,this._timeLeft=s,this._inst.GetWorldInfo().SetVisible(!1),this._runtime.UpdateRender()}_StopFlashing(){this._timeLeft=0,this._inst.GetWorldInfo().SetVisible(!0),this._runtime.UpdateRender()}_IsFlashing(){return 0<this._timeLeft}SaveToJson(){return{"on":this._onTime,"off":this._offTime,"s":this._stage,"stl":this._stageTimeLeft,"tl":this._timeLeft}}LoadFromJson(e){this._onTime=e["on"],this._offTime=e["off"],this._stage=e["s"],this._stageTimeLeft=e["stl"],this._timeLeft=null===e["tl"]?1/0:e["tl"]}Tick(){if(!(this._timeLeft<=0)){const e=this._runtime.GetDt(this._inst);if(this._timeLeft-=e,this._timeLeft<=0)return this._timeLeft=0,this._inst.GetWorldInfo().SetVisible(!0),this._runtime.UpdateRender(),this.DispatchScriptEvent("flashend"),this.DebugTrigger(g.Behaviors.Flash.Cnds.OnFlashEnded);this._stageTimeLeft-=e,this._stageTimeLeft<=0&&(0===this._stage?(this._inst.GetWorldInfo().SetVisible(!1),this._stage=1,this._stageTimeLeft+=this._offTime):(this._inst.GetWorldInfo().SetVisible(!0),this._stage=0,this._stageTimeLeft+=this._onTime),this._runtime.UpdateRender())}}GetDebuggerProperties(){const e="behaviors.flash.debugger";return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:e+".on-time",value:this._onTime,onedit:e=>this._onTime=e},{name:e+".off-time",value:this._offTime,onedit:e=>this._offTime=e},{name:e+".is-flashing",value:0<this._timeLeft},{name:e+".time-left",value:this._timeLeft}]}]}GetScriptInterfaceClass(){return self.IFlashBehaviorInstance}},new WeakMap);self.IFlashBehaviorInstance=class extends i{constructor(){super(),j.set(this,i._GetInitInst().GetSdkInstance())}flash(e,t,s){h.RequireFiniteNumber(e),h.RequireFiniteNumber(t),h.RequireFiniteNumber(s),j.get(this)._Flash(e,t,s)}stop(){j.get(this)._StopFlashing()}get isFlashing(){return j.get(this)._IsFlashing()}}}{const z=self.C3;z.Behaviors.Flash.Cnds={IsFlashing(){return this._IsFlashing()},OnFlashEnded(){return!0}}}{const A=self.C3;A.Behaviors.Flash.Acts={Flash(e,t,s){this._Flash(e,t,s)},StopFlashing(){this._StopFlashing()}}}{const E=self.C3;E.Behaviors.Flash.Exps={}}
+}
+
 // scripts/behaviors/destroy/c3runtime/runtime.js
 {
 {const a=self.C3;a.Behaviors.destroy=class extends a.SDKBehaviorBase{constructor(e){super(e)}Release(){super.Release()}}}{const d=self.C3;d.Behaviors.destroy.Type=class extends d.SDKBehaviorTypeBase{constructor(e){super(e)}Release(){super.Release()}OnCreate(){}}}{const g=self.C3;g.Behaviors.destroy.Instance=class extends g.SDKBehaviorInstanceBase{constructor(e,s){super(e),this._StartTicking()}Release(){super.Release()}Tick(){const e=this._inst.GetWorldInfo(),s=e.GetBoundingBox(),t=e.GetLayout();(s.getRight()<0||s.getBottom()<0||s.getLeft()>t.GetWidth()||s.getTop()>t.GetHeight())&&this._runtime.DestroyInstance(this._inst)}}}{const n=self.C3;n.Behaviors.destroy.Cnds={}}{const o=self.C3;o.Behaviors.destroy.Acts={}}{const p=self.C3;p.Behaviors.destroy.Exps={}}
@@ -2315,6 +2335,8 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject();
 		},
+		() => 210,
+		() => 380,
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpInstVar();
@@ -2350,7 +2372,21 @@ self.C3_ExpressionFuncs = [
 		() => 92,
 		() => 40,
 		() => "Testing Group",
-		() => "Mobile controls",
+		() => "Controls Manager",
+		() => "Playing",
+		() => "TouchedTime",
+		() => 5,
+		() => "Analog Stick Behavior - Mobile",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const f1 = p._GetNode(1).GetBoundMethod();
+			const f2 = p._GetNode(2).GetBoundMethod();
+			const f3 = p._GetNode(3).GetBoundMethod();
+			const f4 = p._GetNode(4).GetBoundMethod();
+			const f5 = p._GetNode(5).GetBoundMethod();
+			const f6 = p._GetNode(6).GetBoundMethod();
+			return () => f0("Stick", f1("BKG", f2(), f3()), f4("BKG", f5(), f6()));
+		},
 		() => "Setting Cell Position",
 		() => "MapStarting",
 		p => {
@@ -2404,14 +2440,44 @@ self.C3_ExpressionFuncs = [
 			const n1 = p._GetNode(1);
 			return () => f0(n1.ExpObject(), 35, 0.2);
 		},
-		() => 100,
+		() => 200,
 		() => 220,
 		() => "Loosing game",
 		() => 20,
 		() => 0.4,
 		() => "Neurons vibration",
+		() => "NeuronSeq - Camera Behavior",
+		p => {
+			const n0 = p._GetNode(0);
+			const n1 = p._GetNode(1);
+			return () => C3.lerp(n0.ExpObject(), (n1.ExpInstVar() - 110), 0.08);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => C3.lerp(f0(), 0.5, 0.08);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => C3.lerp(f0(), 0.4, 0.08);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const n1 = p._GetNode(1);
+			return () => C3.lerp(n0.ExpObject(), (n1.ExpInstVar() - 130), 0.08);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const n1 = p._GetNode(1);
+			return () => C3.lerp(n0.ExpObject(), n1.ExpInstVar(), 0.08);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => C3.lerp(f0(), n1.ExpInstVar(), 0.08);
+		},
 		() => "Muscles Hero Start",
 		() => 150,
+		() => 0.5,
 		() => "Game Logic while playing",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -2425,7 +2491,6 @@ self.C3_ExpressionFuncs = [
 		() => 1284,
 		() => 922,
 		() => 662,
-		() => "Playing",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => (5 * f0());
@@ -2438,6 +2503,13 @@ self.C3_ExpressionFuncs = [
 		() => 10,
 		() => "Flex",
 		() => "Tutorial",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const f1 = p._GetNode(1).GetBoundMethod();
+			const f2 = p._GetNode(2).GetBoundMethod();
+			const f3 = p._GetNode(3).GetBoundMethod();
+			return () => f0(Math.floor(f1(0, 255)), Math.floor(f2(0, 255)), Math.floor(f3(0, 255)));
+		},
 		() => "Arms and Legs Behavior",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -2469,26 +2541,18 @@ self.C3_ExpressionFuncs = [
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => C3.lerp(f0(), 1.4, 0.08);
+			return () => C3.lerp(f0(), 1.5, 0.08);
 		},
 		p => {
 			const n0 = p._GetNode(0);
 			return () => C3.lerp(n0.ExpObject(), 100, 0.08);
 		},
-		p => {
-			const n0 = p._GetNode(0);
-			const n1 = p._GetNode(1);
-			return () => C3.lerp(n0.ExpObject(), n1.ExpInstVar(), 0.08);
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
-			return () => C3.lerp(f0(), n1.ExpInstVar(), 0.08);
-		},
+		() => "Surprise",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => C3.lerp(n0.ExpObject(), 0, 0.08);
 		},
+		() => "Talking",
 		() => "Loosing Game - Muscle Hero",
 		() => "Tutorial - MusclesHero",
 		() => "Start - Lungs",
@@ -2555,7 +2619,6 @@ self.C3_ExpressionFuncs = [
 			return () => (n0.ExpObject() - (n1.ExpInstVar() * f2()));
 		},
 		() => "HaciendoZoom",
-		() => 450,
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
@@ -2585,6 +2648,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Button Highlight Flashing",
 		() => 0.3,
+		() => 100,
 		() => "Stomach Start",
 		() => "PTW",
 		p => {
@@ -2614,6 +2678,7 @@ self.C3_ExpressionFuncs = [
 		() => 8,
 		() => "Bouncing walls",
 		() => "Breaking Particles",
+		() => "SmashEffect",
 		() => 1.5,
 		p => {
 			const n0 = p._GetNode(0);
@@ -2623,8 +2688,11 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => C3.lerp(n0.ExpInstVar(), 25, 0.08);
 		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0(0, 360);
+		},
 		() => "Particles moving through Stomach",
-		() => 5,
 		() => "Acid bubbles logic",
 		() => "ForBubbles",
 		() => "Acid",
@@ -2657,16 +2725,30 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Maze Start",
 		() => "Poo movement",
-		() => "Down",
-		() => "Up",
-		() => "Left",
-		() => "Right",
+		() => 0.6,
+		p => {
+			const n0 = p._GetNode(0);
+			const n1 = p._GetNode(1);
+			const n2 = p._GetNode(2);
+			const n3 = p._GetNode(3);
+			return () => C3.toDegrees(C3.angleTo(n0.ExpObject(), n1.ExpObject(), n2.ExpObject(), n3.ExpObject()));
+		},
+		() => -45,
+		() => 45,
+		() => 135,
+		() => -180,
+		() => -135,
 		p => {
 			const n0 = p._GetNode(0);
 			const v1 = p._GetNode(1).GetVar();
 			const f2 = p._GetNode(2).GetBoundMethod();
 			const v3 = p._GetNode(3).GetVar();
 			return () => n0.ExpObject((((v1.GetValue() + f2()) + v3.GetValue()) + "AP"));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => C3.lerp(n0.ExpObject(), (f1() / 2), 0.08);
 		},
 		() => "Water Bar behavior",
 		p => {
@@ -2680,6 +2762,9 @@ self.C3_ExpressionFuncs = [
 			const n3 = p._GetNode(3);
 			return () => ((n0.ExpInstVar() / n1.ExpInstVar()) * (n2.ExpInstVar() - n3.ExpInstVar()));
 		},
+		() => 0.1,
+		() => "Poo Sine behavior",
+		() => 1.8,
 		() => "Intestine Start",
 		p => {
 			const n0 = p._GetNode(0);
@@ -2705,7 +2790,6 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => (f0("Particles") - 100);
 		},
-		() => 200,
 		() => "Amylase",
 		() => "Pepsin",
 		() => "Lipase",
@@ -2763,7 +2847,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Buttons effect sound",
 		() => "Nervous Start",
-		() => "HotEffect",
+		() => -30,
 		() => "TimeToStartPlaying",
 		() => "CountDown",
 		() => "Count Down Behavior",
@@ -2773,52 +2857,42 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "TimeToReact",
 		() => "Touching Organs behavior",
-		p => {
-			const n0 = p._GetNode(0);
-			const n1 = p._GetNode(1);
-			return () => C3.lerp(n0.ExpObject(), (n1.ExpInstVar() + 100), 0.08);
-		},
-		p => {
-			const n0 = p._GetNode(0);
-			const n1 = p._GetNode(1);
-			return () => C3.lerp(n0.ExpObject(), (n1.ExpInstVar() - 50), 0.08);
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
-			return () => f0(n1.ExpObject(), 45, 0.08);
-		},
+		() => "StimuliEye_OFF",
+		() => "StimuliEye_ON",
 		() => "Win and Loose Logic - Nervous",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpInstVar_Family();
 		},
 		() => "StartOver",
-		p => {
-			const n0 = p._GetNode(0);
-			const n1 = p._GetNode(1);
-			const n2 = p._GetNode(2);
-			const n3 = p._GetNode(3);
-			return () => (n0.ExpInstVar() - ((n1.ExpBehavior("TimeToReact") * n2.ExpInstVar()) / n3.ExpBehavior("TimeToReact")));
-		},
 		() => "Stimuli effects",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("FlashEffect");
+		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => C3.lerp(f0("FlashEffect"), 0, 0.08);
 		},
-		() => 0.5,
 		() => "CameraFlash",
 		() => "RaceCar",
 		p => {
+			const n0 = p._GetNode(0);
+			return () => C3.lerp(n0.ExpInstVar(), 0, 0.03);
+		},
+		() => "Tint",
+		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const n1 = p._GetNode(1);
-			return () => (f0("HotEffect") + n1.ExpInstVar());
+			const n2 = p._GetNode(2);
+			const n3 = p._GetNode(3);
+			return () => f0(n1.ExpInstVar(), n2.ExpInstVar(), n3.ExpInstVar());
 		},
-		() => 50,
 		p => {
 			const n0 = p._GetNode(0);
-			return () => (n0.ExpInstVar() * (-1));
+			return () => C3.lerp(n0.ExpInstVar(), 255, 0.03);
 		},
+		() => "Lectern Buttons Behavior",
 		() => "Skin Start",
 		() => "Night",
 		() => 513,
@@ -2842,6 +2916,7 @@ self.C3_ExpressionFuncs = [
 		() => "Fading Platforms",
 		() => "Playing Skin",
 		() => "Skin - Winning condition",
+		() => "Dialog",
 		() => "Jacket",
 		() => "Loosing Conditions",
 		() => "Body temperature Bar Behavior",
@@ -2892,16 +2967,17 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0("Night");
 		},
+		() => 50,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const f1 = p._GetNode(1).GetBoundMethod();
 			return () => (f0("Night") + (30 * f1()));
 		},
 		() => "Sperm Start",
-		() => 2000,
+		() => 800,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(200, 300);
+			return () => f0(150, 200);
 		},
 		() => "Arrow fluids flow logic",
 		p => {
@@ -2928,16 +3004,24 @@ self.C3_ExpressionFuncs = [
 			return () => (n0.ExpObject() + (300 * f1()));
 		},
 		() => "Obstacles",
-		() => 1056,
-		() => 2944,
-		() => 2064,
+		() => 1667,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(300, 500);
+			return () => f0("Obstacles");
+		},
+		() => 2327,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => (f0() / 2);
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(2, 5);
+			return () => f0(90, 120);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			return () => (f0("Ovum") + n1.ExpObject());
 		},
 		() => "Destroy obstacles",
 		() => 4000,
@@ -2956,7 +3040,39 @@ self.C3_ExpressionFuncs = [
 			const v3 = p._GetNode(3).GetVar();
 			return () => n0.ExpObject((((v1.GetValue() + f2()) + v3.GetValue()) + "Wall"));
 		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => (20 * f0());
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const n1 = p._GetNode(1);
+			const n2 = p._GetNode(2);
+			const n3 = p._GetNode(3);
+			return () => C3.distanceTo(n0.ExpObject(1), n1.ExpObject(1), n2.ExpObject(), n3.ExpObject());
+		},
 		() => "Sperm - Movement",
+		() => "Right",
+		() => "Left",
+		() => "Secondary Sperms",
+		() => "Background Behavior",
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => (n0.ExpObject() + (200 * f1()));
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => (f0("BCKG") + 1152);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("BCKG");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("UterusWalls");
+		},
 		() => "Map Dialogs",
 		p => {
 			const n0 = p._GetNode(0);
@@ -2970,6 +3086,7 @@ self.C3_ExpressionFuncs = [
 			const v3 = p._GetNode(3).GetVar();
 			return () => n0.ExpObject(and((v1.GetValue() + f2()), v3.GetValue()));
 		},
+		() => 2185072,
 		() => "Map",
 		() => "Appear",
 		() => "MusclesHero",
@@ -2993,7 +3110,21 @@ self.C3_ExpressionFuncs = [
 		() => 11,
 		() => "CloseDialog",
 		() => "Hiding Dialog",
+		() => "Patino structure",
+		() => 171,
+		() => 168,
+		() => 115,
+		() => 108,
+		() => 77,
+		() => 61,
+		p => {
+			const n0 = p._GetNode(0);
+			const n1 = p._GetNode(1);
+			return () => C3.lerp(n0.ExpObject(), n1.ExpObject(1), 0.08);
+		},
+		() => "Patino Expresions",
 		() => "Timer START",
+		() => "Clock",
 		() => "Timer END",
 		() => 357,
 		() => 360,

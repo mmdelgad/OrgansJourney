@@ -2283,6 +2283,7 @@ self.C3_ExpressionFuncs = [
 		() => "",
 		() => -10,
 		() => "Starting a New Game",
+		() => "Map",
 		() => "Ray Effect and rain",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -2318,7 +2319,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => 120,
 		() => 1500,
-		() => "FadeOut",
+		() => "Transitions",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0("Fade");
@@ -2329,6 +2330,11 @@ self.C3_ExpressionFuncs = [
 			const f1 = p._GetNode(1).GetBoundMethod();
 			return () => (f0("Fade") - (80 * f1()));
 		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => v0.GetValue();
+		},
+		() => "Out",
 		() => "Camera",
 		() => "StartingGame",
 		p => {
@@ -2337,10 +2343,12 @@ self.C3_ExpressionFuncs = [
 		},
 		() => 210,
 		() => 380,
+		() => "In",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpInstVar();
 		},
+		() => "HUD",
 		() => "Texts Setting",
 		() => "Menu Texts",
 		() => "Menu",
@@ -2389,10 +2397,6 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Setting Cell Position",
 		() => "MapStarting",
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => v0.GetValue();
-		},
 		() => "Animation 1",
 		() => "Following Cell (Camera)",
 		() => "Moving cell to next Stage",
@@ -2618,7 +2622,6 @@ self.C3_ExpressionFuncs = [
 			const f2 = p._GetNode(2).GetBoundMethod();
 			return () => (n0.ExpObject() - (n1.ExpInstVar() * f2()));
 		},
-		() => "HaciendoZoom",
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
@@ -2631,6 +2634,7 @@ self.C3_ExpressionFuncs = [
 			return () => (n0.ExpObject() + n1.ExpObject());
 		},
 		() => "Camara - Lungs",
+		() => "HaciendoZoom",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => C3.lerp(f0(), 1, 0.08);
@@ -3063,11 +3067,11 @@ self.C3_ExpressionFuncs = [
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => (f0("BCKG") + 1152);
+			return () => (f0("BKG") + 1152);
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0("BCKG");
+			return () => f0("BKG");
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -3087,7 +3091,6 @@ self.C3_ExpressionFuncs = [
 			return () => n0.ExpObject(and((v1.GetValue() + f2()), v3.GetValue()));
 		},
 		() => 2185072,
-		() => "Map",
 		() => "Appear",
 		() => "MusclesHero",
 		() => "Lungs",
@@ -3106,6 +3109,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => 576,
 		() => "Changing dialog",
+		() => "Hungry",
 		() => 9,
 		() => 11,
 		() => "CloseDialog",
@@ -3123,6 +3127,11 @@ self.C3_ExpressionFuncs = [
 			return () => C3.lerp(n0.ExpObject(), n1.ExpObject(1), 0.08);
 		},
 		() => "Patino Expresions",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => Math.floor(f0(0, 2));
+		},
+		() => "Sad",
 		() => "Timer START",
 		() => "Clock",
 		() => "Timer END",

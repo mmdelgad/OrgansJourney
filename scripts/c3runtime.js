@@ -2282,12 +2282,19 @@ self.C3_ExpressionFuncs = [
 		() => -10,
 		() => 0,
 		() => "",
+		() => "Play",
 		() => "Starting a New Game",
+		() => "Animation 2",
 		() => "Map",
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() + 1);
+		},
+		() => "Continue",
 		() => "Ray Effect and rain",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(4, 10);
+			return () => f0(7, 12);
 		},
 		() => "Ray",
 		() => 920,
@@ -2295,7 +2302,6 @@ self.C3_ExpressionFuncs = [
 		() => 1032,
 		() => 368,
 		() => 90,
-		() => -20,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0(3, 6);
@@ -2333,6 +2339,7 @@ self.C3_ExpressionFuncs = [
 			return () => v0.GetValue();
 		},
 		() => "Out",
+		() => -20,
 		() => "Initial Settings",
 		() => "StartingGame",
 		p => {
@@ -2348,6 +2355,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Transition",
 		() => "Menu",
+		() => "GameMusic",
 		() => "NeuronSeq",
 		() => "NeuronSeq2",
 		() => "NeuronSeq3",
@@ -2362,13 +2370,11 @@ self.C3_ExpressionFuncs = [
 		() => "Sperm",
 		() => "Texts Setting",
 		() => "Menu Texts",
-		() => "Play",
 		p => {
 			const n0 = p._GetNode(0);
 			const v1 = p._GetNode(1).GetVar();
 			return () => n0.ExpObject((v1.GetValue() + "NewGameButton"));
 		},
-		() => "Continue",
 		p => {
 			const n0 = p._GetNode(0);
 			const v1 = p._GetNode(1).GetVar();
@@ -2411,6 +2417,11 @@ self.C3_ExpressionFuncs = [
 		},
 		() => 180,
 		() => 15,
+		() => "Mouse",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => and("NervousS/Mouse", Math.floor(f0(0, 5)));
+		},
 		() => "Bats Behavior",
 		() => 8,
 		() => "Animation 1",
@@ -2425,7 +2436,6 @@ self.C3_ExpressionFuncs = [
 		() => 4,
 		() => 6,
 		() => "Activating Nodes",
-		() => "Animation 2",
 		() => "Showing sequence",
 		() => "ShowSequence",
 		() => "ShowingSequence",
@@ -2528,6 +2538,10 @@ self.C3_ExpressionFuncs = [
 			const f2 = p._GetNode(2).GetBoundMethod();
 			const f3 = p._GetNode(3).GetBoundMethod();
 			return () => f0(Math.floor(f1(0, 255)), Math.floor(f2(0, 255)), Math.floor(f3(0, 255)));
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => and("Muscles/Electric", Math.floor(f0(0, 2)));
 		},
 		() => "Arms and Legs Behavior",
 		p => {
@@ -2685,7 +2699,6 @@ self.C3_ExpressionFuncs = [
 			return () => Math.floor(f0(1, 3));
 		},
 		() => "Particles",
-		() => "Bouncing walls",
 		() => "Breaking Particles",
 		() => "SmashEffect",
 		() => 1.5,
@@ -2704,6 +2717,9 @@ self.C3_ExpressionFuncs = [
 		() => "Particles moving through Stomach",
 		() => "Acid bubbles logic",
 		() => "ForBubbles",
+		() => 271,
+		() => 275,
+		() => 276,
 		() => "Acid",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -2715,22 +2731,37 @@ self.C3_ExpressionFuncs = [
 			return () => f0(80, 150);
 		},
 		() => "BloodPipes Start",
-		() => 18,
+		() => 11,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => (Math.floor(f0(0, 2))).toString();
 		},
 		() => "Pipes Touching",
 		() => "Angle",
+		() => -17179870207,
 		() => "Segment",
 		() => "Horizontal",
 		() => "Vertical",
 		() => "Win conditions Blood Pipes",
+		() => 18,
 		() => "Blood",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => C3.lerp(f0("Blood"), 100, 0.08);
 		},
+		() => "Green Effect",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			const n2 = p._GetNode(2);
+			return () => f0(n1.ExpInstVar_Family(), 100, n2.ExpInstVar_Family());
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => C3.lerp(n0.ExpInstVar_Family(), 100, 0.03);
+		},
+		() => 95,
+		() => -281492157629439,
 		() => "Maze Start",
 		() => "Poo movement",
 		() => 0.6,
@@ -2877,6 +2908,7 @@ self.C3_ExpressionFuncs = [
 		() => "TimeToStartPlaying",
 		() => "CountDown",
 		() => "Count Down Behavior",
+		() => -15,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => and("Animation ", Math.floor(f0(1, 4)));
@@ -3014,11 +3046,16 @@ self.C3_ExpressionFuncs = [
 		},
 		p => {
 			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => (n0.ExpObject() - (200 * f1()));
+		},
+		p => {
+			const n0 = p._GetNode(0);
 			return () => (n0.ExpInstVar() / 6);
 		},
 		p => {
 			const n0 = p._GetNode(0);
-			return () => (n0.ExpInstVar() * 1.5);
+			return () => (n0.ExpInstVar() * 1.3);
 		},
 		p => {
 			const n0 = p._GetNode(0);
@@ -3028,15 +3065,15 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
-			return () => (n0.ExpObject() + (300 * f1()));
+			return () => (n0.ExpObject() + (200 * f1()));
 		},
 		() => "Obstacles",
-		() => 1667,
+		() => 1665,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0("Obstacles");
 		},
-		() => 2327,
+		() => 2328,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => (f0() / 2);
@@ -3082,11 +3119,6 @@ self.C3_ExpressionFuncs = [
 		() => "Secondary Sperms",
 		() => "Background Behavior",
 		p => {
-			const n0 = p._GetNode(0);
-			const f1 = p._GetNode(1).GetBoundMethod();
-			return () => (n0.ExpObject() + (200 * f1()));
-		},
-		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => (f0("BKG") + 1152);
 		},
@@ -3125,7 +3157,6 @@ self.C3_ExpressionFuncs = [
 		() => "Talking",
 		() => "Sad",
 		() => 9,
-		() => 11,
 		() => "CloseDialog",
 		() => "Hiding Dialog",
 		() => "Patino structure",
@@ -3161,7 +3192,12 @@ self.C3_ExpressionFuncs = [
 			const f2 = p._GetNode(2).GetBoundMethod();
 			const v3 = p._GetNode(3).GetVar();
 			return () => n0.ExpObject((((v1.GetValue() + f2()) + v3.GetValue()) + "Time"));
-		}
+		},
+		() => "Accelerating Music",
+		() => 1.25,
+		() => 181,
+		() => 359,
+		() => 1.75
 ];
 
 

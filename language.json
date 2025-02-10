@@ -1,5 +1,6 @@
 {
 	"en": {
+		"Map10": "Alright, professor, we've reached the end. It's time to select the genre of your creation... Once this is decided, our experiment will be complete!",
 		"Map1": "Welcome, Professor! The experiment is ready to begin. Our goal is to test each system of the human body to see if the creation will work.",
 		"Map2": "Look at this board, each poster represents a system of the body, starting with neurons. Did you know that neurons are made up of cells? Cells are the building blocks of all living things!",
 		"Map3": "The first challenge will test how neurons send signals through the body. It’s your first step to bringing this creation to life. Are you ready to begin?",
@@ -65,6 +66,8 @@
 		"SkinLooseHot": "Oh no, Professor! The body overheated because it didn’t cool down in time. Next time, remember to find water quickly!",
 		"SkinLooseDamage": "Oops, Professor! The skin couldn’t handle the UV rays without sunscreen. Be sure to collect protection next time before it’s too late!",
 		"SkinLooseCold": "Oh dear, Professor! The body got too cold and couldn’t stay warm. Don’t forget to find shelter or a jacket next time!",
+		"SkinLBLBodyTemperature": "Body Temperature",
+		"SkinLBLUV": "UV Damage",
 		"Sperm1": "Professor, now it’s time to test the reproductive system! Your goal is to guide a sperm cell through the uterus to reach the egg.",
 		"Sperm2": "Watch out for obstacles like acid, uterine walls, and strong currents that can push the sperm off course. Navigate carefully and stay focused to complete the journey!",
 		"SpermLooseAcid": "Oh no, Professor! The sperm cell was destroyed by the acid and couldn’t continue. Avoid those areas next time to keep the journey going!",
@@ -75,6 +78,7 @@
 		
 	},
 	"es": {
+		"Map10": "Muy bien profesor, llegamos al final. Es momento de seleccionar el género de su creación... Una vez que lo haya decidido, ¡nuestro experimento estará completo!",
 		"Map1": "¡Bienvenido, Profesor! El experimento está listo para comenzar. Nuestro objetivo es probar cada sistema del cuerpo humano para ver si la creación funcionará.",
         "Map2": "Mira este pizarrón, cada póster representa un sistema del cuerpo, comenzando por las neuronas. ¿Sabías que las neuronas están formadas por células? ¡Las células son los bloques de construcción de todos los seres vivos!",
         "Map3": "El primer desafío probará cómo las neuronas envían señales a través del cuerpo. Es tu primer paso para dar vida a esta creación. ¿Estás listo para comenzar?",
@@ -140,6 +144,8 @@
         "SkinLooseHot": "¡Oh no, Profesor! El cuerpo se sobrecalentó porque no se enfrió a tiempo. Recuerda encontrar agua rápidamente la próxima vez.",
         "SkinLooseDamage": "¡Ups, Profesor! La piel no pudo manejar los rayos UV sin protector solar. Asegúrate de recolectar protección la próxima vez antes de que sea demasiado tarde.",
         "SkinLooseCold": "¡Oh, querido Profesor! El cuerpo se enfrió demasiado y no pudo mantenerse caliente. No olvides encontrar refugio o un abrigo la próxima vez.",
+		"SkinLBLBodyTemperature": "Temperatura del cuerpo",
+		"SkinLBLUV": "Daño UV",
         "Sperm1": "Profesor, ahora es momento de probar el sistema reproductivo. Tu objetivo es guiar una célula espermática a través del útero para alcanzar el óvulo.",
         "Sperm2": "Cuidado con los obstáculos como el ácido y las paredes del útero; detendrán al esperma de completar su viaje. ¡Navega con cuidado y mantente enfocado!",
         "SpermLooseAcid": "¡Oh no, Profesor! La célula espermática fue destruida por el ácido y no pudo continuar. Evita esas áreas la próxima vez para mantener el viaje en marcha.",
